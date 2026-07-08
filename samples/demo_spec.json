@@ -1,0 +1,88 @@
+{
+  "title": "Engine Validation Demo",
+  "assets_root": "C:/Users/shal1/OneDrive/Desktop/Operation Hair Transfer",
+  "music_dir": "03_Music/",
+  "sfx_dir": "04_Sound FX/",
+  "resolution": [1920, 1080],
+  "fps": 30,
+  "narration": { "backend": "sapi" },
+  "scenes": [
+    {
+      "id": "00_logo",
+      "type": "black_card",
+      "lines": [
+        { "t": "FAMILY PICTURES", "f": "IMP", "s": 118, "y": 470, "c": "WHITE", "tr": 16, "st": 2 },
+        { "t": "מציגה", "f": "HE", "s": 60, "y": 605, "c": "GOLD", "rtl": true, "st": 1 }
+      ],
+      "duration": 4.2,
+      "music": "01_Opening_Theme.mp3",
+      "music_offset": 0,
+      "sfx": "Impacts/06_Logo_Whoosh.wav",
+      "zoom_in": true,
+      "narration": "Family Pictures... presents."
+    },
+    {
+      "id": "01_recap",
+      "type": "photo",
+      "image": "01_Photos/כולם עם שיער.jpeg",
+      "caption": "הגברים ניסו... פעמיים. ונכשלו",
+      "duration": 5.2,
+      "music": "03_Comedy_Theme.mp3",
+      "music_offset": 0,
+      "sfx": "Transitions/09_Impact_Boom.wav",
+      "zoom_in": true,
+      "narration": "The men tried. Twice. And they failed.",
+      "narration_delay": 0.4
+    },
+    {
+      "id": "03_women",
+      "type": "black_card",
+      "lines": [
+        { "t": "אז המשפחה קראה...", "f": "HE", "s": 86, "y": 440, "c": "WHITE", "rtl": true, "st": 2 },
+        { "t": "לנשים", "f": "HE", "s": 120, "y": 600, "c": "PINK", "rtl": true, "st": 2 }
+      ],
+      "duration": 4.4,
+      "music": "04_Hero_Theme.mp3",
+      "music_offset": 0,
+      "sfx": "Transitions/10_Boom_Swoosh.wav",
+      "zoom_in": true,
+      "narration": "So the family called in... the women."
+    },
+    {
+      "id": "04_orna",
+      "type": "reveal",
+      "transition": "fadewhite",
+      "before": {
+        "type": "cast_card",
+        "image": "01_Photos/חלק3/אורנה האמא.jpeg",
+        "name": "ORNA", "role": "ראש המשפחה • The Boss", "tag": "צוות הדודות"
+      },
+      "after": {
+        "type": "cast_card",
+        "image": "01_Photos/חלק3/bald/orna.jpg",
+        "name": "ORNA", "role": "ראש המשפחה • The Boss", "tag": "צוות הדודות"
+      },
+      "duration": 4.6,
+      "music": "04_Hero_Theme.mp3",
+      "music_offset": 4.0,
+      "sfx": "Impacts/04_Whoosh_Short.wav",
+      "narration": "Orna. Roi's mother. The boss."
+    },
+    {
+      "id": "21_end",
+      "type": "black_card",
+      "lines": [
+        { "t": "ככה זה במשפחה...", "f": "HE", "s": 86, "y": 420, "c": "WHITE", "rtl": true, "st": 2 },
+        { "t": "הנשים", "f": "HE", "s": 100, "y": 560, "c": "PINK", "rtl": true, "st": 2 },
+        { "t": "מנהלות את ההצגה", "f": "HE", "s": 92, "y": 700, "c": "GOLD", "rtl": true, "st": 2 }
+      ],
+      "duration": 6.0,
+      "music": "05_End_Credits.mp3",
+      "music_offset": 0,
+      "zoom_in": true,
+      "narration": "That's how it is in a family... the women run the show.",
+      "narration_delay": 0.4,
+      "fadeout": 1.6
+    }
+  ]
+}

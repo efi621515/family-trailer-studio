@@ -1,0 +1,19 @@
+# user data & runtime
+_projects/
+data/
+_work/
+samples/_work*/
+
+# big/local-only
+cloudflared.exe
+*.mp4
+
+# python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# os
+.DS_Store
+Thumbs.db

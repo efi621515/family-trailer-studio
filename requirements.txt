@@ -1,0 +1,11 @@
+# Family Trailer Studio
+fastapi>=0.115
+uvicorn[standard]>=0.30
+python-multipart>=0.0.9
+Pillow>=10.0
+python-bidi>=0.4
+anthropic>=0.116
+qrcode[pil]>=7.4
+piper-tts>=1.2            # neural voice on Linux/cloud (Windows local uses SAPI)
+# ffmpeg is installed at the OS level (see Dockerfile / must be on PATH locally)
+# 3D depth (torch + transformers) is added in the 3D phase — heavier image, installed separately

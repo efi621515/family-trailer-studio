@@ -1,0 +1,355 @@
+{
+  "title": "Operation Hair Transfer: The Women Take Over",
+  "assets_root": "C:/Users/shal1/OneDrive/Desktop/Operation Hair Transfer",
+  "music_dir": "03_Music/",
+  "sfx_dir": "04_Sound FX/",
+  "resolution": [
+    1920,
+    1080
+  ],
+  "fps": 30,
+  "narration": {
+    "backend": "sapi"
+  },
+  "scenes": [
+    {
+      "id": "00_logo",
+      "type": "logo",
+      "narration": "Family Trailer Studio presents...",
+      "duration": 4.5,
+      "music": "01_Opening_Theme.mp3",
+      "sfx": "Impacts/06_Logo_Whoosh.wav",
+      "lines": [
+        {
+          "t": "FAMILY TRAILER STUDIO",
+          "f": "IMP",
+          "s": 74,
+          "y": 470,
+          "c": "GOLD",
+          "tr": 6,
+          "st": 3
+        },
+        {
+          "t": "אולפני משפחה מציגים",
+          "f": "HE",
+          "s": 46,
+          "y": 590,
+          "c": "WHITE",
+          "rtl": true
+        }
+      ]
+    },
+    {
+      "id": "01_hook",
+      "type": "photo",
+      "narration": "Once upon a time, this family had glorious hair.",
+      "duration": 5,
+      "music": "02_Family_Theme.mp3",
+      "sfx": "Camera/01_Camera_Click_Flas.wav",
+      "image": "01_Photos/כולם עם שיער.jpeg",
+      "caption": "פעם... לכולם היה שיער",
+      "caption_size": 60
+    },
+    {
+      "id": "02_gadi_crisis",
+      "type": "photo",
+      "narration": "But the wigs are still stuck at Uncle Gadi's place in Eilat.",
+      "duration": 5,
+      "music": "03_Comedy_Theme.mp3",
+      "sfx": "Impacts/04_Whoosh_Short.wav",
+      "image": "01_Photos/חלק2/דוד gadi.jpg",
+      "caption": "הפאות עדיין תקועות אצל דוד גדי באילת",
+      "caption_size": 52
+    },
+    {
+      "id": "03_men_failed",
+      "type": "black_card",
+      "narration": "The men tried. The men failed. Twice.",
+      "duration": 5,
+      "music": "07_Trailer_Boom.mp3",
+      "sfx": "Transitions/08_Cinematic_Boom.wav",
+      "lines": [
+        {
+          "t": "THE MEN FAILED",
+          "f": "IMP",
+          "s": 84,
+          "y": 440,
+          "c": "RED",
+          "tr": 4,
+          "st": 3
+        },
+        {
+          "t": "הגברים נכשלו. פעמיים.",
+          "f": "HE",
+          "s": 50,
+          "y": 600,
+          "c": "WHITE",
+          "rtl": true
+        }
+      ]
+    },
+    {
+      "id": "04_women_takeover",
+      "type": "black_card",
+      "narration": "Now, the women take over.",
+      "duration": 5,
+      "music": "04_Hero_Theme.mp3",
+      "sfx": "Transitions/10_Boom_Swoosh.wav",
+      "lines": [
+        {
+          "t": "THE WOMEN TAKE OVER",
+          "f": "IMP",
+          "s": 76,
+          "y": 470,
+          "c": "GOLD",
+          "tr": 4,
+          "st": 3
+        },
+        {
+          "t": "עכשיו הנשים משתלטות",
+          "f": "HE",
+          "s": 52,
+          "y": 600,
+          "c": "PINK",
+          "rtl": true
+        }
+      ]
+    },
+    {
+      "id": "05_orna_boss",
+      "type": "cast_card",
+      "narration": "Meet Orna. Roi's mother. The boss.",
+      "duration": 5,
+      "music": "06_Grandma_Theme.mp3",
+      "sfx": "Camera/02_Camera_Shutter.wav",
+      "image": "01_Photos/חלק3/אורנה האמא.jpeg",
+      "name": "ORNA",
+      "role": "The Boss • ראש המשפחה",
+      "tag": "המפקדת",
+      "tag_color": "GOLD"
+    },
+    {
+      "id": "06_eti_cast",
+      "type": "cast_card",
+      "narration": "Aunt Eti. The warm heart of the operation.",
+      "duration": 4.5,
+      "music": "06_Grandma_Theme.mp3",
+      "sfx": "Camera/03_Camera_Flash.wav",
+      "image": "01_Photos/חלק3/אתי האימהית.jpeg",
+      "name": "ETI",
+      "role": "The Heart • הדודה האימהית",
+      "tag": "הלב",
+      "tag_color": "PINK"
+    },
+    {
+      "id": "07_tali_cast",
+      "type": "cast_card",
+      "narration": "Aunt Tali. The stylish diva who loves her hair.",
+      "duration": 4.5,
+      "music": "03_Comedy_Theme.mp3",
+      "sfx": "Camera/03_Camera_Flash.wav",
+      "image": "01_Photos/חלק3/טלי הגנדרנית.jpeg",
+      "name": "TALI",
+      "role": "The Diva • הגנדרנית",
+      "tag": "הדיווה",
+      "tag_color": "PINK"
+    },
+    {
+      "id": "08_solidarity",
+      "type": "black_card",
+      "narration": "To stand with Roi, every woman shaves her head bald.",
+      "duration": 5.5,
+      "music": "04_Hero_Theme.mp3",
+      "sfx": "Transitions/09_Impact_Boom.wav",
+      "lines": [
+        {
+          "t": "TOTAL SOLIDARITY",
+          "f": "IMP",
+          "s": 78,
+          "y": 440,
+          "c": "WHITE",
+          "tr": 4,
+          "st": 3
+        },
+        {
+          "t": "כולן מתגלחות למען רועי",
+          "f": "HE",
+          "s": 50,
+          "y": 600,
+          "c": "GOLD",
+          "rtl": true
+        }
+      ]
+    },
+    {
+      "id": "09_orna_reveal",
+      "type": "reveal",
+      "narration": "Even the boss goes all in.",
+      "duration": 5.5,
+      "music": "07_Trailer_Boom.mp3",
+      "sfx": "Transitions/08_Cinematic_Boom.wav",
+      "before": {
+        "type": "photo",
+        "image": "01_Photos/חלק3/אורנה האמא.jpeg",
+        "caption": "אורנה — לפני"
+      },
+      "after": {
+        "type": "photo",
+        "image": "01_Photos/חלק3/bald/orna.jpg",
+        "caption": "אורנה — אחרי"
+      },
+      "transition": "fadewhite"
+    },
+    {
+      "id": "10_eti_reveal",
+      "type": "reveal",
+      "narration": "Eti doesn't blink.",
+      "duration": 5,
+      "music": "03_Comedy_Theme.mp3",
+      "sfx": "Impacts/05_Whoosh_Long.wav",
+      "before": {
+        "type": "photo",
+        "image": "01_Photos/חלק3/אתי האימהית.jpeg",
+        "caption": "אתי — לפני"
+      },
+      "after": {
+        "type": "photo",
+        "image": "01_Photos/חלק3/bald/eti.jpg",
+        "caption": "אתי — אחרי"
+      },
+      "transition": "fadewhite"
+    },
+    {
+      "id": "11_tali_reveal",
+      "type": "reveal",
+      "narration": "Even the diva sacrifices her crown.",
+      "duration": 5,
+      "music": "03_Comedy_Theme.mp3",
+      "sfx": "Impacts/05_Whoosh_Long.wav",
+      "before": {
+        "type": "photo",
+        "image": "01_Photos/חלק3/טלי הגנדרנית.jpeg",
+        "caption": "טלי — לפני"
+      },
+      "after": {
+        "type": "photo",
+        "image": "01_Photos/חלק3/bald/tali.jpg",
+        "caption": "טלי — אחרי"
+      },
+      "transition": "fadewhite"
+    },
+    {
+      "id": "12_efi_video",
+      "type": "video",
+      "duration": 6,
+      "music": "02_Family_Theme.mp3",
+      "video": "02_Videos/דוד אפי.mp4",
+      "overlay_caption": "וכמובן... דוד אפי. היחיד שהן סומכות עליו"
+    },
+    {
+      "id": "13_group_dissolve",
+      "type": "reveal",
+      "narration": "One family. One look. All in, together.",
+      "duration": 6,
+      "music": "04_Hero_Theme.mp3",
+      "sfx": "Transitions/10_Boom_Swoosh.wav",
+      "before": {
+        "type": "photo",
+        "image": "01_Photos/חלק3/אפי והאחיות לפני.jpeg",
+        "caption": "אפי והדודות — לפני"
+      },
+      "after": {
+        "type": "photo",
+        "image": "01_Photos/חלק3/אפי והדודות אחרי.jpeg",
+        "caption": "אפי והדודות — אחרי"
+      },
+      "transition": "dissolve"
+    },
+    {
+      "id": "14_twist",
+      "type": "photo",
+      "narration": "But there's a twist... Orna knew where the wigs were the whole time.",
+      "duration": 6,
+      "music": "07_Trailer_Boom.mp3",
+      "sfx": "Transitions/09_Impact_Boom.wav",
+      "image": "01_Photos/חלק3/bald/orna.jpg",
+      "caption": "אורנה ידעה איפה הפאות. כל הזמן.",
+      "caption_size": 52,
+      "caption_color": "GOLD"
+    },
+    {
+      "id": "15_title",
+      "type": "black_card",
+      "narration": "Operation Hair Transfer. The women's edition.",
+      "duration": 5,
+      "music": "01_Opening_Theme.mp3",
+      "sfx": "Impacts/07_Title_Whoosh.wav",
+      "lines": [
+        {
+          "t": "OPERATION HAIR TRANSFER",
+          "f": "IMP",
+          "s": 68,
+          "y": 430,
+          "c": "GOLD",
+          "tr": 3,
+          "st": 3
+        },
+        {
+          "t": "מבצע השתלת שיער",
+          "f": "HE",
+          "s": 58,
+          "y": 560,
+          "c": "WHITE",
+          "rtl": true
+        },
+        {
+          "t": "מהדורת הנשים",
+          "f": "HE",
+          "s": 44,
+          "y": 660,
+          "c": "PINK",
+          "rtl": true
+        }
+      ]
+    },
+    {
+      "id": "16_coming_soon",
+      "type": "coming_soon",
+      "narration": "Coming soon.",
+      "duration": 5,
+      "music": "05_End_Credits.mp3",
+      "sfx": "Impacts/06_Logo_Whoosh.wav",
+      "subtitle": "בקרוב אצלכם במשפחה",
+      "rating_letter": "B",
+      "rating_word": "BALD"
+    },
+    {
+      "id": "17_closing",
+      "type": "black_card",
+      "narration": "Because behind every bald family stands a mother.",
+      "duration": 7,
+      "music": "05_End_Credits.mp3",
+      "lines": [
+        {
+          "t": "THE WOMEN RUN THE SHOW",
+          "f": "IMP",
+          "s": 66,
+          "y": 440,
+          "c": "GOLD",
+          "tr": 3,
+          "st": 3
+        },
+        {
+          "t": "מאחורי כל משפחה קרחת — עומדת אמא",
+          "f": "HE",
+          "s": 44,
+          "y": 600,
+          "c": "WHITE",
+          "rtl": true
+        }
+      ]
+    }
+  ],
+  "work_dir": "C:/Users/shal1/OneDrive/Desktop/family-trailer-studio/samples/_work_ai",
+  "output": "C:/Users/shal1/OneDrive/Desktop/family-trailer-studio/samples/_work_ai/ai_trailer.mp4"
+}

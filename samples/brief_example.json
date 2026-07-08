@@ -1,0 +1,22 @@
+{
+  "title": "The Aunts Strike Back",
+  "assets_root": "C:/Users/shal1/OneDrive/Desktop/Operation Hair Transfer",
+  "story": "A comedy family saga. Over two previous trailers, the men of the family tried and failed to solve a family hair crisis — the wigs are stuck at Uncle Gadi's place in Eilat. Now the WOMEN take over: Roi's mother Orna (the boss) and the aunts. To show solidarity with Roi, every woman shaves her head bald. In the end there's a twist — Orna secretly knew where the wigs were the whole time. Moral: behind every bald family stands a mother; the women run the show. Keep the Operation Hair Transfer branding, and always include Uncle Efi (the only man they trust). Bilingual: English voiceover, Hebrew captions.",
+  "photos": [
+    { "file": "01_Photos/כולם עם שיער.jpeg", "label": "The three brothers (incl. Roi) WITH hair — good for the opening hook" },
+    { "file": "01_Photos/חלק2/דוד gadi.jpg", "label": "Uncle Gadi in Eilat (cyclist) — where the wigs are stuck" },
+    { "file": "01_Photos/חלק3/אורנה האמא.jpeg", "label": "Orna, Roi's mother, WITH hair — the boss" },
+    { "file": "01_Photos/חלק3/bald/orna.jpg", "label": "Orna BALD (same person, after shaving)" },
+    { "file": "01_Photos/חלק3/אתי האימהית.jpeg", "label": "Eti, aunt, WITH hair — warm/motherly" },
+    { "file": "01_Photos/חלק3/bald/eti.jpg", "label": "Eti BALD" },
+    { "file": "01_Photos/חלק3/טלי הגנדרנית.jpeg", "label": "Tali, aunt, WITH hair — the stylish diva" },
+    { "file": "01_Photos/חלק3/bald/tali.jpg", "label": "Tali BALD" },
+    { "file": "01_Photos/חלק3/אפי והאחיות לפני.jpeg", "label": "Uncle Efi + all the women together, WITH hair (identical framing to the 'after')" },
+    { "file": "01_Photos/חלק3/אפי והדודות אחרי.jpeg", "label": "Uncle Efi + all the women together, ALL BALD (identical framing — perfect for a dissolve reveal)" }
+  ],
+  "video": "02_Videos/דוד אפי.mp4",
+  "video_caption": "וכמובן... דוד אפי. היחיד שהן סומכות עליו",
+  "notes": "Aim for ~15-18 scenes. Use hair->bald 'reveal' scenes for the aunts (fadewhite) and a 'dissolve' reveal for the Efi+women group photo since its framing is identical. End with a coming-soon and a closing line about the women running the show.",
+  "work_dir": "C:/Users/shal1/OneDrive/Desktop/family-trailer-studio/samples/_work_ai",
+  "output": "C:/Users/shal1/OneDrive/Desktop/family-trailer-studio/samples/_work_ai/ai_trailer.mp4"
+}

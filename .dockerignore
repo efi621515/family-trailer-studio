@@ -1,0 +1,10 @@
+.git/
+**/__pycache__/
+*.pyc
+_projects/
+data/
+_work/
+samples/_work*/
+cloudflared.exe
+*.mp4
+.DS_Store
