@@ -77,7 +77,7 @@ document.getElementById('pw').addEventListener('keydown',e=>{if(e.key==='Enter')
 
 @app.middleware("http")
 async def _auth(request: Request, call_next):
-    if not AUTH_PW or request.url.path == "/api/login":
+    if not AUTH_PW or request.url.path in ("/api/login", "/api/diag"):
         return await call_next(request)
     if request.cookies.get("fts_auth") == _auth_token():
         return await call_next(request)
@@ -138,6 +138,13 @@ def index():
 @app.get("/api/info")
 def info():
     return {"lan_url": f"http://{_lan_ip()}:{PORT}"}
+
+
+@app.get("/api/diag")
+def diag():
+    import bidi
+    from bidi.algorithm import get_display
+    return {"bidi_version": getattr(bidi, "__version__", "?"), "in": "אבג", "out": get_display("אבג")}
 
 
 @app.get("/api/qr")

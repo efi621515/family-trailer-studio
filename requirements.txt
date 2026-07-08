@@ -3,7 +3,7 @@ fastapi>=0.115
 uvicorn[standard]>=0.30
 python-multipart>=0.0.9
 Pillow==12.2.0
-python-bidi==0.6.10       # pinned: newer versions render Hebrew RTL differently (reversed)
+python-bidi==0.4.2        # pure-Python; 0.6.x (Rust) reversed Hebrew wrong on Linux
 anthropic>=0.116
 qrcode[pil]>=7.4
 piper-tts>=1.2            # neural voice on Linux/cloud (Windows local uses SAPI)

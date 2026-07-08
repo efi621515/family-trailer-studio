@@ -1,0 +1,4 @@
+version=?
+algorithm.get_display('אבג') = 'גבא'
+bidi.get_display('אבג') = 'גבא'
+algorithm base_dir=R = 'גבא'
