@@ -108,6 +108,7 @@ class TrailerWriter:
         resp = self.client.messages.create(
             model=self.model, max_tokens=16000,
             thinking={"type": "adaptive"},
+            output_config={"effort": "medium"},   # structured task — faster, less over-thinking
             system=[{"type": "text", "text": SYSTEM}],
             messages=messages,
         )
