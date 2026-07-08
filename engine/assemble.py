@@ -74,8 +74,10 @@ class Assembler:
         return ";".join(parts)
 
     def _enc(self, args, out, dur):
+        preset = os.environ.get("FTS_FFMPEG_PRESET", "medium")   # cloud sets "veryfast" for speed
+        crf = os.environ.get("FTS_FFMPEG_CRF", "19")
         args += ["-map", "[v]", "-map", "[a]", "-t", f"{dur}", "-r", str(self.FPS),
-                 "-c:v", "libx264", "-preset", "medium", "-crf", "19", "-pix_fmt", "yuv420p",
+                 "-c:v", "libx264", "-preset", preset, "-crf", crf, "-pix_fmt", "yuv420p",
                  "-c:a", "aac", "-b:a", "192k", "-ar", "48000", "-ac", "2", out]
         self._run(args)
 

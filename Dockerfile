@@ -26,6 +26,8 @@ ENV FTS_FONTS_DIR=/app/fonts \
     FTS_LIBRARY=/app/library \
     FTS_PROJECTS=/app/data/_projects \
     FTS_OPEN_BROWSER=0 \
+    FTS_FFMPEG_PRESET=veryfast \
+    FTS_FFMPEG_CRF=23 \
     PYTHONUNBUFFERED=1
 
 EXPOSE 8000
