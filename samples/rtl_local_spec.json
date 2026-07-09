@@ -1,0 +1,19 @@
+{
+  "title": "RTL local",
+  "assets_root": "C:/Users/shal1/OneDrive/Desktop/family-trailer-studio",
+  "music_dir": "library/03_Music/",
+  "sfx_dir": "library/04_Sound FX/",
+  "work_dir": "C:/Users/shal1/OneDrive/Desktop/family-trailer-studio/samples/_work_rtl",
+  "output": "C:/Users/shal1/OneDrive/Desktop/family-trailer-studio/samples/_work_rtl/rtl_local.mp4",
+  "narration": { "backend": "sapi" },
+  "scenes": [
+    {
+      "id": "t", "type": "black_card", "duration": 3.0, "music": "01_Opening_Theme.mp3",
+      "zoom_in": true, "narration": "In a family of legends.",
+      "lines": [
+        { "t": "IN A FAMILY OF LEGENDS...", "f": "IMP", "s": 96, "y": 460, "c": "WHITE", "tr": 8, "st": 2 },
+        { "t": "במשפחה של אגדות...", "f": "HE", "s": 72, "y": 600, "c": "GOLD", "rtl": true, "st": 2 }
+      ]
+    }
+  ]
+}

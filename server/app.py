@@ -142,9 +142,28 @@ def info():
 
 @app.get("/api/diag")
 def diag():
-    import bidi
-    from bidi.algorithm import get_display
-    return {"bidi_version": getattr(bidi, "__version__", "?"), "in": "אבג", "out": get_display("אבג")}
+    res = {"in": "אבג"}
+    try:
+        import importlib.metadata as md
+        res["ver"] = md.version("python-bidi")
+    except Exception as e:
+        res["ver"] = f"err:{e}"
+    try:
+        from bidi.algorithm import get_display as g1
+        res["algorithm"] = g1("אבג")
+    except Exception as e:
+        res["algorithm"] = f"err:{e}"
+    try:
+        from bidi import get_display as g2
+        res["toplevel"] = g2("אבג")
+    except Exception as e:
+        res["toplevel"] = f"err:{e}"
+    try:
+        from engine import scenes
+        res["scenes_uses"] = scenes.get_display("אבג")      # the EXACT function the render uses
+    except Exception as e:
+        res["scenes_uses"] = f"err:{e}"
+    return res
 
 
 @app.get("/api/qr")
