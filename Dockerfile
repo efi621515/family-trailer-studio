@@ -26,6 +26,12 @@ RUN mkdir -p /app/voices && cd /app/voices && \
         wget -qO $n.onnx.json "$base/$v.onnx.json" ; \
     done
 
+# 3D depth photos: CPU-only torch + transformers, then pre-cache the depth model
+# into the image so the first 3D render doesn't stall on a ~100MB download.
+RUN pip install --no-cache-dir --extra-index-url https://download.pytorch.org/whl/cpu \
+        "torch>=2.2" "transformers>=4.45" && \
+    python -c "from transformers import pipeline; pipeline('depth-estimation', model='depth-anything/Depth-Anything-V2-Small-hf')"
+
 COPY . .
 
 ENV FTS_FONTS_DIR=/app/fonts \

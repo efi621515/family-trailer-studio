@@ -136,6 +136,37 @@ class Assembler:
         self._enc(args, out, dur)
         return out
 
+    def seg_3d(self, idx, sc, frames):
+        """A pre-rendered depth-parallax clip (full-frame, no audio) + caption + music/vo."""
+        out = f"{self.SEG}{idx:02d}.mp4"
+        dur = sc["duration"]
+        fo = sc.get("fadeout", 0.45)
+        W, H = self.W, self.H
+        clip = sc["_3d_clip"] if os.path.isabs(sc["_3d_clip"]) else self.A + sc["_3d_clip"]
+        cap = frames.get("overlay")
+        args = ["ffmpeg", "-y", "-i", clip]
+        ai = 1
+        cap_idx = None
+        if cap:
+            args += ["-i", cap]; cap_idx = ai; ai += 1
+        args += ["-ss", str(sc.get("music_offset", 0)), "-t", f"{dur}", "-i", self._music(sc["music"])]
+        midx = ai; ai += 1
+        sidx = vidx = None
+        sp = self._sfxp(sc.get("sfx"))
+        if sp:
+            args += ["-i", sp]; sidx = ai; ai += 1
+        vo = sc.get("_vo")
+        if vo:
+            args += ["-i", vo]; vidx = ai; ai += 1
+        vf = f"[0:v]scale={W}:{H},setsar=1"
+        if cap:
+            vf += f"[base];[base][{cap_idx}:v]overlay=0:0"
+        vf += f",fade=t=in:st=0:d=0.4,fade=t=out:st={dur-fo:.3f}:d={fo},format=yuv420p[v]"
+        fc = vf + ";" + self._audio_chain(dur, midx, sidx, vidx, sc.get("narration_delay", 0.3))
+        args += ["-filter_complex", fc]
+        self._enc(args, out, dur)
+        return out
+
     def _has_audio(self, path):
         p = subprocess.run(["ffprobe", "-v", "error", "-select_streams", "a",
                             "-show_entries", "stream=index", "-of", "csv=p=0", path],
@@ -181,6 +212,8 @@ class Assembler:
                 segs.append(self.seg_reveal(i, sc, frames))
             elif t == "video":
                 segs.append(self.seg_video(i, sc, frames))
+            elif sc.get("_3d_clip"):
+                segs.append(self.seg_3d(i, sc, frames))
             else:
                 segs.append(self.seg_image(i, sc, frames))
             print("seg", i, sc["id"])

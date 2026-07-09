@@ -92,9 +92,11 @@ def render_3d_clip(photo_path, out_mp4, dur=4.0, fps=30, amp=70.0, size=(1920, 1
     ox0, oy0 = (W - fw) // 2, (H - fh) // 2                 # fg paste offset
 
     n = max(1, int(round(dur * fps)))
+    preset = os.environ.get("FTS_FFMPEG_PRESET", "medium")   # cloud sets "veryfast"
+    crf = os.environ.get("FTS_FFMPEG_CRF", "19")
     args = ["ffmpeg", "-y", "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{W}x{H}",
             "-r", str(fps), "-i", "-", "-an", "-t", f"{dur}", "-r", str(fps),
-            "-c:v", "libx264", "-preset", "medium", "-crf", "19", "-pix_fmt", "yuv420p", out_mp4]
+            "-c:v", "libx264", "-preset", preset, "-crf", crf, "-pix_fmt", "yuv420p", out_mp4]
     os.makedirs(os.path.dirname(os.path.abspath(out_mp4)), exist_ok=True)
     p = subprocess.Popen(args, stdin=subprocess.PIPE, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     two_pi = 2.0 * np.pi

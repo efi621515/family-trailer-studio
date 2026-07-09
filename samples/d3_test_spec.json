@@ -1,0 +1,16 @@
+{
+  "title": "3D test",
+  "assets_root": "C:/Users/shal1/OneDrive/Desktop/family-trailer-studio",
+  "music_dir": "library/03_Music/",
+  "sfx_dir": "library/04_Sound FX/",
+  "work_dir": "C:/Users/shal1/OneDrive/Desktop/family-trailer-studio/samples/_work_d3",
+  "output": "C:/Users/shal1/OneDrive/Desktop/family-trailer-studio/samples/_work_d3/d3.mp4",
+  "narration": { "backend": "sapi" },
+  "scenes": [
+    {
+      "id": "p1", "type": "photo", "duration": 4.0, "music": "02_Family_Theme.mp3",
+      "d3": true, "image": "samples/_work/scenes/03_women.png",
+      "caption": "רגע של עומק", "caption_color": "GOLD"
+    }
+  ]
+}

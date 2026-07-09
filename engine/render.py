@@ -62,9 +62,29 @@ def build_trailer(spec, work_dir=None, out_path=None, verbose=True):
     if verbose:
         print(f"narration: {len(vo_map)} lines")
 
-    # 2) frames — render each scene's still(s) + attach vo path
+    # 2) frames — render each scene's still(s) + attach vo path. A photo flagged
+    #    "d3" gets a depth-based 3D parallax clip (raw photo warped) + a separate
+    #    transparent caption overlaid on top, instead of the usual Ken Burns still.
+    threed_dir = work + "/threed/"
+    a_root = assets_root.replace("\\", "/").rstrip("/") + "/"
     for sc in scenes:
-        sc["_frames"] = renderer.render(sc)
+        if sc.get("type") == "photo" and sc.get("d3"):
+            os.makedirs(threed_dir, exist_ok=True)
+            frames = {}
+            cap = sc.get("caption", "")
+            if cap:
+                frames["overlay"] = renderer.transparent_caption(
+                    sc["id"] + "_cap.png", cap,
+                    sc.get("caption_size", 74), sc.get("caption_color", "GOLD"))
+            from .depth3d import render_3d_clip
+            clip = threed_dir + sc["id"] + "_3d.mp4"
+            render_3d_clip(a_root + sc["image"], clip,
+                           dur=sc.get("duration", 4.0), fps=fps,
+                           amp=sc.get("amp", 64.0), size=size, verbose=verbose)
+            sc["_3d_clip"] = clip
+            sc["_frames"] = frames
+        else:
+            sc["_frames"] = renderer.render(sc)
         sc["_vo"] = vo_map.get(sc["id"])
         if verbose:
             print("frame", sc["id"])
