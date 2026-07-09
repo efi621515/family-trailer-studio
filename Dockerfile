@@ -11,12 +11,20 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Piper neural voice (English narration) — offline, free
-RUN mkdir -p /app/voices && \
-    wget -qO /app/voices/en_US-lessac-medium.onnx \
-      "https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_US/lessac/medium/en_US-lessac-medium.onnx" && \
-    wget -qO /app/voices/en_US-lessac-medium.onnx.json \
-      "https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_US/lessac/medium/en_US-lessac-medium.onnx.json"
+# Piper neural voices (English narration) — offline, free. One .onnx + .onnx.json
+# per voice; the app exposes them as a picker. Base path on HuggingFace piper-voices.
+RUN mkdir -p /app/voices && cd /app/voices && \
+    base="https://huggingface.co/rhasspy/piper-voices/resolve/main" && \
+    for v in \
+      en/en_US/lessac/medium/en_US-lessac-medium \
+      en/en_US/amy/medium/en_US-amy-medium \
+      en/en_US/ryan/high/en_US-ryan-high \
+      en/en_GB/alan/medium/en_GB-alan-medium \
+      en/en_GB/jenny_dioco/medium/en_GB-jenny_dioco-medium ; do \
+        n=$(basename $v) && \
+        wget -qO $n.onnx "$base/$v.onnx" && \
+        wget -qO $n.onnx.json "$base/$v.onnx.json" ; \
+    done
 
 COPY . .
 

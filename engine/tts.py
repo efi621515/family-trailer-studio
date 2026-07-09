@@ -16,7 +16,7 @@ import tempfile
 class SapiNarrator:
     """Windows SAPI TTS via a generated PowerShell script (English narration)."""
 
-    def __init__(self, voice="Microsoft David Desktop", rate=-2, pitch="-15%", volume=100):
+    def __init__(self, voice="Microsoft David Desktop", rate=-2, pitch="-15%", volume=100, **_):
         self.voice = voice
         self.rate = rate
         self.pitch = pitch
@@ -66,7 +66,7 @@ class PiperNarrator:
     synth_all(items, out_dir) contract as SapiNarrator.
     """
 
-    def __init__(self, model=None, voice_cmd="piper"):
+    def __init__(self, model=None, voice_cmd="piper", **_):
         self.model = model or os.environ.get("FTS_PIPER_MODEL")
         self.voice_cmd = voice_cmd
 

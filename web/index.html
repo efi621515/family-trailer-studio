@@ -136,6 +136,11 @@
       <button type="button" id="musUploadBtn" class="minibtn">⬆️ העלה מוזיקה משלכם</button>
       <input type="file" id="musFile" accept="audio/*" multiple hidden>
     </div>
+    <div class="musicglobal" id="voiceBar" hidden>🎙️ קול הקריינות:
+      <select id="voiceSel"></select>
+      <button type="button" id="voicePlay" class="minibtn" title="האזנה">▶</button>
+      <span class="hint" style="margin:0">האזינו ובחרו — הקול יחול על כל הטריילר</span>
+    </div>
     <div class="scenes" id="scenes"></div>
   </div>
 
@@ -173,7 +178,7 @@ async function api(path,opts){ const r=await fetch(path,opts); if(!r.ok){ const 
 
 async function init(){ const d=await api('/api/project',{method:'POST'}); PID=d.project_id; HAS_KEY=d.has_api_key;
   if(!HAS_KEY) $('#writeMsg').innerHTML='<span class="err">⚠️ צריך מפתח ANTHROPIC_API_KEY כדי שה-AI יכתוב. הגדירו אותו והפעילו מחדש.</span>';
-  await fetchMusic();
+  await fetchMusic(); fetchVoices();
   try{ const inf=await api('/api/info'); if(inf.lan_url){ $('#lanUrl').textContent=inf.lan_url;
     $('#qrImg').src='/api/qr'; $('#phoneBar').hidden=false; } }catch(e){} }
 init();
@@ -209,7 +214,7 @@ $('#writeBtn').onclick=async()=>{ const story=$('#story').value.trim();
   $('#writeBtn').disabled=false; };
 
 let SPEC=null;
-function showScenes(d){ SPEC=d.spec; renderEditor();
+function showScenes(d){ SPEC=d.spec; syncVoiceSel(); renderEditor();
   $('#scriptCard').classList.remove('disabled'); $('#renderCard').classList.remove('disabled');
   $('#scriptCard').scrollIntoView({behavior:'smooth'}); }
 
@@ -258,9 +263,9 @@ function musicOptions(cur){ return MUSIC.map(n=>`<option value="${n}"${n===cur?'
 function fillGlobalMus(){ const g=$('#globalMus'); if(g) g.innerHTML=MUSIC.map(n=>`<option value="${n}">${musicLabel(n)}</option>`).join(''); }
 let curPlay=null, playingBtn=null;
 function stopPrev(){ if(playingBtn) playingBtn.classList.remove('playing'); playingBtn=null; curPlay=null; }
-function togglePreview(name, btn){ const a=$('#preview');
+function togglePreview(name, btn, url){ const a=$('#preview');
   if(curPlay===name && !a.paused){ a.pause(); stopPrev(); return; }
-  stopPrev(); a.src=musicUrl(name); a.play().catch(()=>{});
+  stopPrev(); a.src=url||musicUrl(name); a.play().catch(()=>{});
   curPlay=name; playingBtn=btn||null; if(btn) btn.classList.add('playing'); }
 $('#preview').addEventListener('ended', stopPrev);
 $('#globalPlay').onclick=()=>{ const n=$('#globalMus').value; if(n) togglePreview(n, $('#globalPlay')); };
@@ -275,6 +280,19 @@ $('#musFile').onchange=async e=>{ const files=[...e.target.files]; if(!files.len
     setTimeout(()=>btn.textContent=orig,1800); }
   catch(err){ alert('שגיאה בהעלאה: '+err.message); btn.textContent=orig; }
   e.target.value=''; };
+// --- voice picker (choose narration voice + preview; cloud only) ---
+let VOICES=[];
+async function fetchVoices(){ try{ const v=await api('/api/voices'); VOICES=v.voices||[];
+  if(!VOICES.length) return;                                   // local (SAPI) -> keep picker hidden
+  const sel=$('#voiceSel'); sel.innerHTML=VOICES.map(o=>`<option value="${o.id}">${o.label}</option>`).join('');
+  $('#voiceBar').hidden=false; syncVoiceSel(); }catch(e){} }
+function syncVoiceSel(){ const sel=$('#voiceSel'); if(!sel||!VOICES.length) return;
+  if(SPEC && !SPEC.voice) SPEC.voice=VOICES[0].id;
+  sel.value=(SPEC&&SPEC.voice)||VOICES[0].id; }
+$('#voiceSel')&&($('#voiceSel').onchange=e=>{ if(SPEC) SPEC.voice=e.target.value; });
+$('#voicePlay')&&($('#voicePlay').onclick=()=>{ const id=$('#voiceSel').value; if(id)
+  togglePreview('voice:'+id, $('#voicePlay'), `/api/voice/preview?id=${encodeURIComponent(id)}`); });
+
 const TYPE_HE={black_card:'כרטיס טקסט',logo:'פתיח',photo:'תמונה',cast_card:'כרטיס דמות',
   coming_soon:'בקרוב',reveal:'מעבר',video:'וידאו'};
 const isTitle=s=>/title|כותרת/i.test(s.id||'');

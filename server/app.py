@@ -31,6 +31,26 @@ LIBRARY = os.environ.get("FTS_LIBRARY", BASE + "/library").replace("\\", "/")
 MUSIC_DIR = LIBRARY + "/03_Music"
 SFX_DIR = LIBRARY + "/04_Sound FX"
 
+# Narration voices (Piper neural, cloud). Each id -> a .onnx in FTS_VOICES_DIR.
+# /api/voices returns only the ones actually present, so this degrades gracefully
+# (e.g. locally, where SAPI is used and no /app/voices exists -> picker hidden).
+VOICES_DIR = os.environ.get("FTS_VOICES_DIR", "/app/voices").replace("\\", "/")
+VOICES = [
+    {"id": "us_female",  "label": "👩 אישה · אמריקאי",       "file": "en_US-lessac-medium.onnx"},
+    {"id": "us_female2", "label": "👩 אישה · אמריקאי (חם)",  "file": "en_US-amy-medium.onnx"},
+    {"id": "us_male",    "label": "🧔 גבר · אמריקאי",         "file": "en_US-ryan-high.onnx"},
+    {"id": "uk_male",    "label": "🧔 גבר · בריטי",           "file": "en_GB-alan-medium.onnx"},
+    {"id": "uk_female",  "label": "👩 אישה · בריטי",          "file": "en_GB-jenny_dioco-medium.onnx"},
+]
+
+
+def _voice_model(vid):
+    v = next((v for v in VOICES if v["id"] == vid), None)
+    if not v:
+        return None
+    mp = f"{VOICES_DIR}/{v['file']}"
+    return mp if os.path.isfile(mp) else None
+
 app = FastAPI(title="Family Trailer Studio")
 JOBS = {}  # project_id -> {state, message}
 PORT = int(os.environ.get("PORT", 8000))
@@ -222,6 +242,38 @@ def music_file(name: str):
     return FileResponse(full, media_type="audio/mpeg")
 
 
+@app.get("/api/voices")
+def voices_list():
+    """Only voices whose model file is present (cloud). Empty locally -> UI hides picker."""
+    return {"voices": [{"id": v["id"], "label": v["label"]}
+                       for v in VOICES if _voice_model(v["id"])]}
+
+
+@app.get("/api/voice/preview")
+def voice_preview(id: str):
+    mp = _voice_model(id)
+    if not mp:
+        raise HTTPException(404, "voice not available")
+    import tempfile
+    import subprocess
+    sample = "Every family has a story worth telling."
+    fd, wav = tempfile.mkstemp(suffix=".wav")
+    os.close(fd)
+    try:
+        subprocess.run([os.environ.get("FTS_PIPER_CMD", "piper"), "--model", mp,
+                        "--output_file", wav], input=sample, text=True, check=True,
+                       stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        data = open(wav, "rb").read()
+    except Exception as e:  # noqa: BLE001
+        raise HTTPException(500, f"preview failed: {e}")
+    finally:
+        try:
+            os.remove(wav)
+        except OSError:
+            pass
+    return Response(data, media_type="audio/wav")
+
+
 @app.get("/api/project/{pid}/music")
 def project_music(pid: str):
     d = _pdir(pid)
@@ -323,6 +375,11 @@ def _render(pid, spec_path):
     try:
         with open(spec_path, "r", encoding="utf-8") as fh:
             spec = json.load(fh)
+        # resolve the picked voice (Piper/cloud) into the narrator options
+        if os.environ.get("FTS_TTS_BACKEND") == "piper":
+            mp = _voice_model(spec.get("voice"))
+            if mp:
+                spec.setdefault("narration", {}).setdefault("options", {})["model"] = mp
         build_trailer(spec, verbose=True)
         JOBS[pid] = {"state": "done", "message": "הטריילר מוכן!"}
     except Exception as e:  # noqa: BLE001
