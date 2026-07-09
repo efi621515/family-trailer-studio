@@ -12,6 +12,14 @@ try:
 except Exception:  # pragma: no cover
     from bidi import get_display
 
+# Force BASIC text layout so Pillow never applies its own bidi/shaping (raqm). We
+# reorder RTL ourselves via python-bidi; without this, a raqm-enabled Pillow (as on
+# Linux/cloud) would reverse Hebrew a SECOND time and it renders backwards.
+try:
+    _BASIC_LAYOUT = ImageFont.Layout.BASIC
+except AttributeError:
+    _BASIC_LAYOUT = ImageFont.LAYOUT_BASIC
+
 DEFAULT_FONTS = {"HE": "arialbd.ttf", "BLACK": "ariblk.ttf", "IMP": "impact.ttf"}
 DEFAULT_PALETTE = {
     "GOLD": [216, 178, 60], "WHITE": [244, 244, 244],
@@ -33,7 +41,7 @@ class SceneRenderer:
 
     # ---- low-level helpers -------------------------------------------------
     def font(self, key, s):
-        return ImageFont.truetype(self.FD + self.fonts.get(key, key), s)
+        return ImageFont.truetype(self.FD + self.fonts.get(key, key), s, layout_engine=_BASIC_LAYOUT)
 
     def color(self, c):
         if c is None:
