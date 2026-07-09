@@ -78,9 +78,16 @@ def build_trailer(spec, work_dir=None, out_path=None, verbose=True):
                     sc.get("caption_size", 74), sc.get("caption_color", "GOLD"))
             from .depth3d import render_3d_clip
             clip = threed_dir + sc["id"] + "_3d.mp4"
+            # The parallax warp is the render's heaviest step (per-frame numpy over
+            # the whole frame). seg_3d upscales the clip to full res anyway and the
+            # background is blurred, so we warp at reduced res for a big speedup.
+            # FTS_3D_SCALE trades speed vs foreground sharpness (0.5 ~= 4x faster).
+            sc3 = float(os.environ.get("FTS_3D_SCALE", "0.5"))
+            d3_size = (max(2, int(size[0] * sc3) // 2 * 2), max(2, int(size[1] * sc3) // 2 * 2))
+            amp = sc.get("amp", 64.0) * (d3_size[1] / max(1, size[1]))   # keep motion ~constant
             render_3d_clip(a_root + sc["image"], clip,
                            dur=sc.get("duration", 4.0), fps=fps,
-                           amp=sc.get("amp", 64.0), size=size, verbose=verbose)
+                           amp=amp, size=d3_size, verbose=verbose)
             sc["_3d_clip"] = clip
             sc["_frames"] = frames
         else:
