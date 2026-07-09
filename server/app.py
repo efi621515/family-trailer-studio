@@ -155,9 +155,24 @@ def index():
         return fh.read()
 
 
+_THREED = None
+
+
+def _threed_ready():
+    """Is the depth-3D stack available (torch + transformers present)?"""
+    global _THREED
+    if _THREED is None:
+        try:
+            import importlib.util as u
+            _THREED = bool(u.find_spec("torch") and u.find_spec("transformers"))
+        except Exception:
+            _THREED = False
+    return _THREED
+
+
 @app.get("/api/info")
 def info():
-    return {"lan_url": f"http://{_lan_ip()}:{PORT}"}
+    return {"lan_url": f"http://{_lan_ip()}:{PORT}", "threed": _threed_ready()}
 
 
 @app.get("/api/diag")

@@ -162,7 +162,7 @@
 <audio id="preview"></audio>
 
 <script>
-let PID=null, HAS_KEY=false, PHOTOS=[], MUSIC=[];
+let PID=null, HAS_KEY=false, PHOTOS=[], MUSIC=[], THREED=false;
 const $=s=>document.querySelector(s);
 
 // --- editable app title (persists in this browser) ---
@@ -182,7 +182,7 @@ async function api(path,opts){ const r=await fetch(path,opts); if(!r.ok){ const 
 async function init(){ const d=await api('/api/project',{method:'POST'}); PID=d.project_id; HAS_KEY=d.has_api_key;
   if(!HAS_KEY) $('#writeMsg').innerHTML='<span class="err">⚠️ צריך מפתח ANTHROPIC_API_KEY כדי שה-AI יכתוב. הגדירו אותו והפעילו מחדש.</span>';
   await fetchMusic(); fetchVoices();
-  try{ const inf=await api('/api/info'); if(inf.lan_url){ $('#lanUrl').textContent=inf.lan_url;
+  try{ const inf=await api('/api/info'); THREED=!!inf.threed; if(inf.lan_url){ $('#lanUrl').textContent=inf.lan_url;
     $('#qrImg').src='/api/qr'; $('#phoneBar').hidden=false; } }catch(e){} }
 init();
 
@@ -307,7 +307,7 @@ function renderEditor(){ const c=$('#scenes'); c.innerHTML='';
       <button data-a="up" title="למעלה">↑</button><button data-a="down" title="למטה">↓</button><button data-a="del" title="מחק">🗑</button></div>`;
     const texts=sceneTexts(s);
     texts.forEach(f=>{ html+=`<div class="fld"><label>${f[0]}</label><input type="text" data-fk="${f[1]}" value="${esc(f[2]())}"></div>`; });
-    if(s.type==='photo') html+=`<div class="fld"><label class="d3lbl"><input type="checkbox" class="d3"${s.d3?' checked':''}> 🎥 תלת-מימד — תנועת עומק אמיתית (איטי יותר לרנדר)</label></div>`;
+    if(s.type==='photo' && THREED) html+=`<div class="fld"><label class="d3lbl"><input type="checkbox" class="d3"${s.d3?' checked':''}> 🎥 תלת-מימד — תנועת עומק אמיתית (איטי יותר לרנדר)</label></div>`;
     if(s.type!=='video') html+=`<div class="fld"><label>מוזיקה</label><div class="musicrow"><select class="mus">${musicOptions(s.music)}</select><button type="button" class="play minibtn" title="האזנה">▶</button></div></div>`;
     if(s.type!=='video') html+=`<div class="fld"><label>קריינות (אנגלית — מתורגם אוטומטית) <span class="tstatus"></span></label><input class="vo" type="text" data-fk="__vo" value="${esc(s.narration)}"></div>`;
     el.innerHTML=html;
