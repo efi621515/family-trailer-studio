@@ -101,7 +101,7 @@
 
 <div class="wrap">
   <div class="phonebar" id="phoneBar" hidden>
-    <div class="phoneinfo">📱 <b>לצפייה בטלפון</b> (באותו Wi-Fi): סרקו את הקוד, או פִּתחו בדפדפן של הטלפון:
+    <div class="phoneinfo">📱 <b>לצפייה בטלפון</b> <span id="phoneHow">(סרקו את הקוד או פתחו בדפדפן):</span>
       <span id="lanUrl" dir="ltr"></span></div>
     <img id="qrImg" class="qr" alt="QR">
   </div>
@@ -183,7 +183,8 @@ async function init(){ const d=await api('/api/project',{method:'POST'}); PID=d.
   if(!HAS_KEY) $('#writeMsg').innerHTML='<span class="err">⚠️ צריך מפתח ANTHROPIC_API_KEY כדי שה-AI יכתוב. הגדירו אותו והפעילו מחדש.</span>';
   await fetchMusic(); fetchVoices();
   try{ const inf=await api('/api/info'); THREED=!!inf.threed; if(inf.lan_url){ $('#lanUrl').textContent=inf.lan_url;
-    $('#qrImg').src='/api/qr'; $('#phoneBar').hidden=false; } }catch(e){} }
+    $('#phoneHow').textContent=inf.cloud?'(עובד מכל מקום — סרקו או פתחו בדפדפן):':'(באותו Wi-Fi — סרקו או פתחו בדפדפן):';
+    $('#qrImg').src='/api/qr?v='+Date.now(); $('#phoneBar').hidden=false; } }catch(e){} }
 init();
 
 // --- photos ---

@@ -67,6 +67,18 @@ def _lan_ip():
         s.close()
 
 
+def _public_url():
+    """The URL a phone should open. In the cloud that's the public HTTPS domain
+    (Railway injects RAILWAY_PUBLIC_DOMAIN); locally it's the LAN address."""
+    explicit = os.environ.get("FTS_PUBLIC_URL", "").strip()
+    if explicit:
+        return explicit.rstrip("/")
+    dom = os.environ.get("RAILWAY_PUBLIC_DOMAIN", "").strip()
+    if dom:
+        return "https://" + dom
+    return f"http://{_lan_ip()}:{PORT}"
+
+
 # ---- family password gate (protects the app when exposed to the internet) ----
 AUTH_PW = os.environ.get("FTS_PASSWORD", "").strip()
 
@@ -172,7 +184,9 @@ def _threed_ready():
 
 @app.get("/api/info")
 def info():
-    return {"lan_url": f"http://{_lan_ip()}:{PORT}", "threed": _threed_ready()}
+    url = _public_url()
+    return {"lan_url": url, "threed": _threed_ready(),
+            "cloud": bool(os.environ.get("RAILWAY_PUBLIC_DOMAIN") or os.environ.get("FTS_PUBLIC_URL"))}
 
 
 @app.get("/api/diag")
@@ -204,7 +218,7 @@ def diag():
 @app.get("/api/qr")
 def qr():
     import qrcode
-    img = qrcode.make(f"http://{_lan_ip()}:{PORT}")
+    img = qrcode.make(_public_url())
     buf = io.BytesIO()
     img.save(buf, format="PNG")
     return Response(buf.getvalue(), media_type="image/png")
