@@ -8,6 +8,7 @@
   :root{ --bg:#0d0d10; --panel:#17171c; --panel2:#1f1f26; --gold:#d8b23c; --pink:#e26e96;
          --text:#f0f0f0; --muted:#9a9aa6; --line:#2b2b34; }
   *{ box-sizing:border-box; }
+  [hidden]{ display:none !important; }   /* flex/grid rules must not override the hidden attribute */
   body{ margin:0; background:var(--bg); color:var(--text);
         font-family:"Segoe UI",Arial,sans-serif; }
   header{ text-align:center; padding:34px 16px 10px; }
@@ -91,12 +92,55 @@
   .phonebar .phoneinfo b{ color:var(--text); }
   .phonebar #lanUrl{ color:var(--gold); }
   .qr{ width:104px; height:104px; border-radius:8px; background:#fff; padding:5px; }
+  /* --- wizard --- */
+  .stepper{ display:flex; gap:4px; justify-content:center; max-width:560px; margin:16px auto 0; padding:0 12px; }
+  .stepper .st{ flex:1; display:flex; flex-direction:column; align-items:center; gap:6px;
+        font-size:12px; color:var(--muted); user-select:none; }
+  .stepper .st .dot{ width:32px; height:32px; border-radius:50%; background:var(--panel2);
+        border:1.5px solid var(--line); display:flex; align-items:center; justify-content:center;
+        font-weight:700; font-size:15px; transition:.15s; }
+  .stepper .st.active{ color:var(--text); }
+  .stepper .st.active .dot{ background:var(--gold); color:#111; border-color:var(--gold);
+        box-shadow:0 0 0 4px rgba(216,178,60,.16); }
+  .stepper .st.done{ color:var(--text); }
+  .stepper .st.done .dot{ background:#22331f; color:#7bd88f; border-color:#3c5a40; }
+  .stepper .st.clickable{ cursor:pointer; }
+  .stepper .st.clickable:hover .dot{ border-color:var(--gold); }
+  .step{ display:none; }
+  .step.active{ display:block; animation:fadein .22s ease; }
+  @keyframes fadein{ from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:none} }
+  .wiznav{ display:flex; gap:10px; align-items:center; margin-top:20px; }
+  .wiznav .spacer{ flex:1; }
+  .wiznav button{ min-height:52px; }
+  .wiznav .primary{ flex:1 1 auto; }
+  .btn-back{ background:transparent; color:var(--muted); border:1px solid var(--line); font-weight:400; }
+  .btn-back:hover{ color:var(--text); border-color:var(--gold); }
+  .exlink{ color:var(--gold); cursor:pointer; }
+  .exlink:hover{ text-decoration:underline; }
+  /* --- mobile / touch --- */
+  @media (max-width:640px){
+    header{ padding:18px 12px 4px; } header h1{ font-size:22px; }
+    header p{ font-size:13px; }
+    .wrap{ padding:10px; } .card{ padding:16px; border-radius:14px; margin:10px 0; }
+    button{ padding:14px 18px; font-size:16px; }
+    textarea,input[type=text]{ font-size:16px; padding:13px; }  /* 16px stops iOS auto-zoom */
+    .grid{ grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); }
+    .stepper .st .lbl{ display:none; }
+    .musicglobal select{ flex:1 1 140px; }
+    .qr{ width:88px; height:88px; }
+  }
 </style>
 </head>
 <body>
 <header>
   <h1>🎬 <span id="appTitle" contenteditable="true" spellcheck="false" title="לחצו כדי לערוך את שם האפליקציה">מפעל הטריילרים המשפחתי</span></h1>
-  <p>העלו תמונות, ספרו את הסיפור — וקבלו טריילר קולנועי · <span class="editnote" id="editTitleBtn">✏️ ערוך כותרת</span></p>
+  <p>שלושה צעדים קלים — וקיבלתם טריילר קולנועי 🍿 · <span class="editnote" id="editTitleBtn">✏️ שם</span> · <span class="editnote" id="phoneToggle">📱 בטלפון</span></p>
+  <div class="stepper" id="stepper">
+    <div class="st" data-go="1"><div class="dot">1</div><span class="lbl">תמונות</span></div>
+    <div class="st" data-go="2"><div class="dot">2</div><span class="lbl">סיפור</span></div>
+    <div class="st" data-go="3"><div class="dot">3</div><span class="lbl">תסריט</span></div>
+    <div class="st" data-go="4"><div class="dot">4</div><span class="lbl">הסרטון</span></div>
+  </div>
 </header>
 
 <div class="wrap">
@@ -106,31 +150,33 @@
     <img id="qrImg" class="qr" alt="QR">
   </div>
 
-  <!-- 1: photos -->
-  <div class="card">
+  <!-- STEP 1: photos -->
+  <div class="card step active" data-step="1">
     <h2><span class="n">1</span>העלו תמונות</h2>
-    <div class="hint">תמונות <b>וגם קליפי וידאו</b> של בני המשפחה והרגעים. אחרי ההעלאה, כתבו ליד כל פריט מי זה / מה רואים.</div>
+    <div class="hint">בחרו תמונות <b>וגם קליפי וידאו</b> של בני המשפחה והרגעים. אחרי ההעלאה, כתבו ליד כל פריט מי זה / מה רואים.</div>
     <div class="drop" id="drop">📷🎬 לחצו כאן לבחירת תמונות או וידאו (אפשר כמה יחד)</div>
     <input type="file" id="file" accept="image/*,video/*" multiple hidden>
     <div class="grid" id="photos"></div>
+    <div class="wiznav"><span class="spacer"></span>
+      <button class="primary" id="next1" disabled>הבא: הסיפור ›</button></div>
   </div>
 
-  <!-- 2: story -->
-  <div class="card" id="storyCard">
+  <!-- STEP 2: story -->
+  <div class="card step" data-step="2" id="storyCard">
     <h2><span class="n">2</span>ספרו את הסיפור</h2>
-    <div class="hint">מי המשפחה, מה הבדיחה או העלילה, ומה הטוויסט. ככל שיותר מפורט — הטריילר יהיה טוב יותר.</div>
+    <div class="hint">מי המשפחה, מה הבדיחה או העלילה, ומה הטוויסט. ככל שיותר מפורט — הטריילר יהיה טוב יותר. אין לכם מה לכתוב? <span class="exlink" id="exampleBtn">מלאו לי דוגמה ›</span></div>
     <textarea id="story" placeholder="לדוגמה: המשפחה שלנו... הדודים ניסו לפתור בעיה, ואז הנשים נכנסו לפעולה..."></textarea>
     <input type="text" id="notes" placeholder="הערות (לא חובה): אורך, סגנון, דמויות שחייבות להופיע..." style="margin-top:10px">
-    <div class="row">
-      <button id="writeBtn">✨ שכתוב תסריט עם AI</button>
-      <span class="msg" id="writeMsg"></span>
-    </div>
+    <div class="msg" id="writeMsg"></div>
+    <div class="wiznav">
+      <button class="btn-back" data-back="1">‹ חזרה</button><span class="spacer"></span>
+      <button class="primary" id="writeBtn">✨ כתוב לי את התסריט ›</button></div>
   </div>
 
-  <!-- 3: script -->
-  <div class="card disabled" id="scriptCard">
+  <!-- STEP 3: script -->
+  <div class="card step" data-step="3" id="scriptCard">
     <h2><span class="n">3</span>התסריט</h2>
-    <div class="hint">זה מה שה-AI כתב — ואתם יכולים לערוך הכל: שנו כתוביות ומוזיקה, סדרו מחדש (↑↓) או מחקו (🗑). כשתשנו כתובית בעברית, <b>הקריינות באנגלית תתעדכן אוטומטית</b>. השינויים יישמרו כשתיצרו את הטריילר.</div>
+    <div class="hint">זה מה שה-AI כתב — ואתם יכולים לערוך הכל: שנו כתוביות ומוזיקה, סדרו מחדש (↑↓) או מחקו (🗑). כשתשנו כתובית בעברית, <b>הקריינות באנגלית תתעדכן אוטומטית</b>.</div>
     <div class="musicglobal">🎵 מוזיקה לכל הסצנות:
       <select id="globalMus"></select>
       <button type="button" id="globalPlay" class="minibtn" title="האזנה">▶</button>
@@ -145,24 +191,29 @@
       <span class="hint" style="margin:0">האזינו ובחרו — הקול יחול על כל הטריילר</span>
     </div>
     <div class="scenes" id="scenes"></div>
+    <div class="wiznav">
+      <button class="btn-back" data-back="2">‹ חזרה</button><span class="spacer"></span>
+      <button class="primary" id="renderBtn">🎬 צור את הסרטון ›</button></div>
   </div>
 
-  <!-- 4: render -->
-  <div class="card disabled" id="renderCard">
-    <h2><span class="n">4</span>צרו את הטריילר</h2>
-    <div class="hint">הרינדור לוקח דקה-שתיים. אל תסגרו את החלון.</div>
-    <div class="row"><button id="renderBtn">🎬 צור טריילר</button></div>
+  <!-- STEP 4: result -->
+  <div class="card step" data-step="4" id="renderCard">
+    <h2><span class="n">4</span>הסרטון שלכם</h2>
+    <div class="hint" id="renderHint">מכינים את הקסם... 🍿</div>
     <div id="renderProgress" hidden><div class="bar"><i></i></div></div>
     <div class="msg" id="renderMsg"></div>
     <video id="video" controls hidden></video>
     <div class="row" id="dlRow" hidden><a id="dl" download="family_trailer.mp4"><button class="ghost">⬇️ הורדה</button></a></div>
+    <div class="wiznav" id="doneNav" hidden>
+      <button class="btn-back" data-back="3">‹ חזרה לעריכה</button><span class="spacer"></span>
+      <button class="primary" id="newBtn">✨ טריילר חדש</button></div>
   </div>
 </div>
 
 <audio id="preview"></audio>
 
 <script>
-let PID=null, HAS_KEY=false, PHOTOS=[], MUSIC=[], THREED=false;
+let PID=null, HAS_KEY=false, PHOTOS=[], MUSIC=[], THREED=false, SPEC=null;
 const $=s=>document.querySelector(s);
 
 // --- editable app title (persists in this browser) ---
@@ -179,12 +230,33 @@ $('#editTitleBtn').onclick=()=>{ AT.focus();
 
 async function api(path,opts){ const r=await fetch(path,opts); if(!r.ok){ const t=await r.json().catch(()=>({detail:r.statusText})); throw new Error(t.detail||r.statusText);} return r.json(); }
 
+// --- wizard navigation ---
+let STEP=1;
+function reachable(n){ return n===1 || (n===2 && PHOTOS.length>0) || ((n===3||n===4) && !!SPEC); }
+function updateStepper(){ document.querySelectorAll('#stepper .st').forEach(st=>{ const n=+st.dataset.go;
+    st.classList.toggle('active', n===STEP); st.classList.toggle('done', n<STEP && reachable(n));
+    st.classList.toggle('clickable', reachable(n) && n!==STEP); }); }
+function goStep(n){ if(!reachable(n)) return; STEP=n;
+  document.querySelectorAll('.step').forEach(s=>s.classList.toggle('active', +s.dataset.step===n));
+  updateStepper(); window.scrollTo({top:0,behavior:'smooth'}); }
+document.querySelectorAll('#stepper .st').forEach(st=> st.onclick=()=>goStep(+st.dataset.go));
+document.querySelectorAll('[data-back]').forEach(b=> b.onclick=()=>goStep(+b.dataset.back));
+$('#next1').onclick=()=>goStep(2);
+$('#newBtn').onclick=()=>location.reload();
+$('#exampleBtn').onclick=()=>{ $('#story').value=
+  'המשפחה שלנו מהעיר, שלוש דורות של אנשים עקשנים וחמים. סבתא מנהלת את המטבח ביד רמה, הדודים תמיד בטוחים שהם צודקים, והילדים משגעים את כולם. בחתונה האחרונה הכל השתבש — אבל בסוף, כמו תמיד, המשפחה ניצחה.';
+  $('#story').focus(); };
+updateStepper();   // mark step 1 active on load
+
 async function init(){ const d=await api('/api/project',{method:'POST'}); PID=d.project_id; HAS_KEY=d.has_api_key;
   if(!HAS_KEY) $('#writeMsg').innerHTML='<span class="err">⚠️ צריך מפתח ANTHROPIC_API_KEY כדי שה-AI יכתוב. הגדירו אותו והפעילו מחדש.</span>';
   await fetchMusic(); fetchVoices();
   try{ const inf=await api('/api/info'); THREED=!!inf.threed; if(inf.lan_url){ $('#lanUrl').textContent=inf.lan_url;
     $('#phoneHow').textContent=inf.cloud?'(עובד מכל מקום — סרקו או פתחו בדפדפן):':'(באותו Wi-Fi — סרקו או פתחו בדפדפן):';
-    $('#qrImg').src='/api/qr?v='+Date.now(); $('#phoneBar').hidden=false; } }catch(e){} }
+    $('#qrImg').src='/api/qr?v='+Date.now(); $('#phoneToggle').style.display=''; } }catch(e){} }
+$('#phoneToggle').onclick=()=>{ const b=$('#phoneBar'); b.hidden=!b.hidden;
+  if(!b.hidden) b.scrollIntoView({behavior:'smooth',block:'nearest'}); };
+$('#phoneToggle').style.display='none';
 init();
 
 // --- photos ---
@@ -204,7 +276,8 @@ function renderPhotos(){ const g=$('#photos'); g.innerHTML='';
       ? `<video src="${src}" muted preload="metadata"></video><span class="vbadge">🎬 וידאו</span>`
       : `<img src="${src}">`;
     el.innerHTML=`${media}<input type="text" placeholder="מי זה / מה רואים?" value="${(p.label||'').replace(/"/g,'&quot;')}">`;
-    el.querySelector('input').oninput=ev=>PHOTOS[i].label=ev.target.value; g.appendChild(el); }); }
+    el.querySelector('input').oninput=ev=>PHOTOS[i].label=ev.target.value; g.appendChild(el); });
+  $('#next1').disabled = PHOTOS.length===0; updateStepper(); }
 
 // --- write ---
 $('#writeBtn').onclick=async()=>{ const story=$('#story').value.trim();
@@ -217,10 +290,7 @@ $('#writeBtn').onclick=async()=>{ const story=$('#story').value.trim();
   catch(err){ $('#writeMsg').innerHTML='<span class="err">'+err.message+'</span>'; }
   $('#writeBtn').disabled=false; };
 
-let SPEC=null;
-function showScenes(d){ SPEC=d.spec; syncVoiceSel(); renderEditor();
-  $('#scriptCard').classList.remove('disabled'); $('#renderCard').classList.remove('disabled');
-  $('#scriptCard').scrollIntoView({behavior:'smooth'}); }
+function showScenes(d){ SPEC=d.spec; syncVoiceSel(); renderEditor(); goStep(3); }
 
 // editable text fields per scene type -> [label, key, getter, setter]
 function sceneTexts(s){ const it=[], T=s.type;
@@ -329,21 +399,32 @@ function renderEditor(){ const c=$('#scenes'); c.innerHTML='';
     c.appendChild(el); }); }
 
 // --- render ---
-$('#renderBtn').onclick=async()=>{ $('#renderBtn').disabled=true; $('#renderProgress').hidden=false;
-  $('#renderMsg').textContent=''; $('#video').hidden=true; $('#dlRow').hidden=true;
+const WAIT_MSGS=['מביים את הסצנות 🎬','מוסיף את המוזיקה 🎵','מקליט את הקריינות 🎙️',
+  'מוסיף כתוביות ✍️','עורך את המעברים ✨','כמעט מוכן... 🍿'];
+let waitTimer=null, waitI=0;
+function startWaitMsgs(){ waitI=0; clearInterval(waitTimer);
+  waitTimer=setInterval(()=>{ waitI=(waitI+1)%WAIT_MSGS.length; $('#renderHint').textContent=WAIT_MSGS[waitI]; }, 2600); }
+function stopWaitMsgs(){ clearInterval(waitTimer); waitTimer=null; }
+
+$('#renderBtn').onclick=async()=>{ $('#renderBtn').disabled=true; goStep(4);
+  $('#doneNav').hidden=true; $('#renderProgress').hidden=false; $('#renderHint').textContent=WAIT_MSGS[0];
+  $('#renderMsg').textContent=''; $('#video').hidden=true; $('#dlRow').hidden=true; startWaitMsgs();
   try{ if(SPEC) await api(`/api/project/${PID}/spec`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(SPEC)});
        await api(`/api/project/${PID}/render`,{method:'POST'}); poll(); }
-  catch(err){ $('#renderMsg').innerHTML='<span class="err">'+err.message+'</span>'; $('#renderBtn').disabled=false; $('#renderProgress').hidden=true; } };
+  catch(err){ stopWaitMsgs(); $('#renderHint').textContent='אופס — משהו השתבש';
+    $('#renderMsg').innerHTML='<span class="err">'+err.message+'</span>';
+    $('#renderProgress').hidden=true; $('#renderBtn').disabled=false; $('#doneNav').hidden=false; } };
 
 async function poll(){ try{ const s=await api(`/api/project/${PID}/status`);
     $('#renderMsg').textContent=s.message||'';
-    if(s.state==='done'){ $('#renderProgress').hidden=true; $('#renderBtn').disabled=false;
-      $('#renderMsg').innerHTML='<span class="ok">✓ הטריילר מוכן!</span>';
+    if(s.state==='done'){ stopWaitMsgs(); $('#renderProgress').hidden=true; $('#renderBtn').disabled=false;
+      $('#renderHint').textContent='הטריילר שלכם מוכן! 🎉'; $('#renderMsg').innerHTML='<span class="ok">✓ אפשר לצפות, להוריד ולשתף</span>';
       const url=`/api/project/${PID}/video?t=${Date.now()}`;
       const v=$('#video'); v.src=url; v.hidden=false; $('#dl').href=url; $('#dlRow').hidden=false;
-      v.scrollIntoView({behavior:'smooth'}); return; }
-    if(s.state==='error'){ $('#renderProgress').hidden=true; $('#renderBtn').disabled=false;
-      $('#renderMsg').innerHTML='<span class="err">שגיאה: '+s.message+'</span>'; return; }
+      $('#doneNav').hidden=false; v.scrollIntoView({behavior:'smooth'}); return; }
+    if(s.state==='error'){ stopWaitMsgs(); $('#renderProgress').hidden=true; $('#renderBtn').disabled=false;
+      $('#renderHint').textContent='אופס — משהו השתבש';
+      $('#renderMsg').innerHTML='<span class="err">שגיאה: '+s.message+'</span>'; $('#doneNav').hidden=false; return; }
     setTimeout(poll,1500);
   }catch(err){ setTimeout(poll,2000); } }
 </script>
