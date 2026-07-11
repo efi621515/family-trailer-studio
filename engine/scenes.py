@@ -6,7 +6,14 @@ parametrized SceneRenderer. Each scene in a trailer spec is a plain dict; the
 renderer bakes it into one or more 1920x1080 PNG frames.
 """
 import os
-from PIL import Image, ImageDraw, ImageFont, ImageFilter
+from PIL import Image, ImageDraw, ImageFont, ImageFilter, ImageOps
+
+
+def _open_upright(path):
+    """Open an image and bake in its EXIF orientation. Phone photos store a
+    rotation flag instead of rotating pixels; PIL ignores it, so portrait shots
+    render sideways/upside-down unless we apply exif_transpose here."""
+    return ImageOps.exif_transpose(Image.open(path)).convert("RGB")
 try:
     from bidi.algorithm import get_display
 except Exception:  # pragma: no cover
@@ -135,7 +142,7 @@ class SceneRenderer:
 
     def photo_caption(self, name, image_rel, caption, csize=78, ccolor="GOLD"):
         W, H = self.W, self.H
-        src = Image.open(self.A + image_rel).convert("RGB")
+        src = _open_upright(self.A + image_rel)
         c = self.cover_blur(src).convert("RGBA")
         fg = self.contain(src, W, H).convert("RGBA")
         c.alpha_composite(fg, ((W - fg.width) // 2, (H - fg.height) // 2))
@@ -148,7 +155,7 @@ class SceneRenderer:
 
     def cast_card(self, name, image_rel, big, role, tag="", tag_color="PINK"):
         W, H = self.W, self.H
-        src = Image.open(self.A + image_rel).convert("RGB")
+        src = _open_upright(self.A + image_rel)
         c = self.cover_blur(src, 0.4).convert("RGBA")
         fg = self.contain(src, 980, 790).convert("RGBA")
         c.alpha_composite(fg, ((W - fg.width) // 2, 95))

@@ -17,7 +17,7 @@ import subprocess
 import sys
 
 import numpy as np
-from PIL import Image, ImageFilter
+from PIL import Image, ImageFilter, ImageOps
 
 _PIPE = None
 
@@ -65,7 +65,7 @@ def _blur_cover(pil_img, W, H, bright=0.5, blur=26):
 def render_3d_clip(photo_path, out_mp4, dur=4.0, fps=30, amp=70.0, size=(1920, 1080),
                    mode="contain", fg_frac=0.92, depth_zoom=0.16, verbose=True):
     W, H = size
-    src = Image.open(photo_path).convert("RGB")
+    src = ImageOps.exif_transpose(Image.open(photo_path)).convert("RGB")
 
     if mode == "cover":
         fg = np.asarray(_cover(src, W, H), dtype=np.float32)
